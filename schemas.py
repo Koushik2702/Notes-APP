@@ -33,6 +33,7 @@ class NoteUpdate(BaseModel):
 
 class NoteResponse(BaseModel):
     id: int
+    owner_id: int
     title: str
     content: str
     created_at: datetime
