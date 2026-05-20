@@ -1,3 +1,5 @@
+from unittest import skip
+
 from fastapi import FastAPI, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
@@ -278,6 +280,8 @@ def share_note(
 @app.get("/search", response_model=list[NoteResponse])
 def search_notes(
     q: str = Query(min_length=1),
+    skip: int = Query(default=0, ge=0),
+    limit: int = Query(default=10, ge=1, le=100),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
@@ -297,6 +301,9 @@ def search_notes(
                 Note.content.ilike(f"%{q}%")
             )
         )
+        .order_by(Note.updated_at.desc())
+        .offset(skip)
+        .limit(limit)
         .all()
     )
 
