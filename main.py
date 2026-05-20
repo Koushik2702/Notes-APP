@@ -61,7 +61,10 @@ def login(user_data: UserLogin, db: Session = Depends(get_db)):
 
     token = create_access_token({"user_id": user.id})
 
-    return {"access_token": token}
+    return {
+        "access_token": token,
+        "token_type": "bearer"
+    }
 
 
 @app.post("/notes", status_code=status.HTTP_201_CREATED, response_model=NoteResponse)
