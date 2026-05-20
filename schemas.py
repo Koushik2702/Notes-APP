@@ -27,8 +27,8 @@ class NoteCreate(BaseModel):
 
 
 class NoteUpdate(BaseModel):
-    title: str = Field(min_length=1, max_length=100)
-    content: str = Field(min_length=1)
+    title: str | None = Field(default=None, min_length=1, max_length=100)
+    content: str | None = Field(default=None, min_length=1)
 
 
 class NoteResponse(BaseModel):

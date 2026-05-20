@@ -149,7 +149,7 @@ def get_note(
     return note
 
 
-@app.put("/notes/{note_id}", response_model=NoteResponse)
+@app.patch("/notes/{note_id}", response_model=NoteResponse)
 def update_note(
     note_id: int,
     note_data: NoteUpdate,
@@ -170,8 +170,17 @@ def update_note(
             detail="Only the owner can update this note"
         )
 
-    note.title = note_data.title
-    note.content = note_data.content
+    if note_data.title is not None:
+       note.title = note_data.title
+
+    if note_data.content is not None:
+       note.content = note_data.content
+
+    if note_data.title is None and note_data.content is None:
+       raise HTTPException(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        detail="At least one field must be provided"
+    )
 
     db.commit()
     db.refresh(note)
